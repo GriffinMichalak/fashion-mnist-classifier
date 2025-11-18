@@ -157,14 +157,13 @@ print('Accuracy for convolutional network: ', correct_cnn/total_cnn)
 
 
 '''
-
 PART 7:
-
 Check the instructions PDF. You need to generate some plots. 
-
 '''
+# code
 
 '''
 PART 8:
 Compare the performance and characteristics of FFN and CNN models.
 '''
+# code
