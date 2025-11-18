@@ -13,14 +13,6 @@ one with a feedforward architecture and the other with a convolutional architect
 evaluate the models and generate plots.
 '''
 
-OUTPUT_DIM = 10
-LEARNING_RATE = 0.001
-NUM_EPOCHS = 5
-
-IMAGE_HEIGHT = 28
-IMAGE_WIDTH = 28
-INPUT_DIM = IMAGE_HEIGHT * IMAGE_WIDTH
-
 '''
 PART 1:
 Preprocess the fashion mnist dataset and determine a good batch size for the dataset.
@@ -31,6 +23,10 @@ transform = transforms.Compose([                            # Use transforms to 
     transforms.Normalize(mean=[0.5], std=[0.5])             # Common method for grayscale images
 ])
 
+# Constants
+OUTPUT_DIM = 10
+LEARNING_RATE = 0.001
+NUM_EPOCHS = 5
 batch_size = 64 # 32–128
 
 '''
@@ -169,18 +165,6 @@ Check the instructions PDF. You need to generate some plots.
 '''
 
 '''
-
-YOUR CODE HERE
-
-'''
-
-'''
 PART 8:
 Compare the performance and characteristics of FFN and CNN models.
-'''
-
-'''
-
-YOUR CODE HERE
-
 '''
