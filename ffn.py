@@ -22,7 +22,18 @@ requires normalized outputs or not.
 class FF_Net(nn.Module):
     def __init__(self):
         super().__init__()
+        self.fc1 = nn.Linear(784, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, 10)
+
+        self.activ_fn = nn.ReLU()
 
     def forward(self, x):
+        x = torch.flatten(x, 1)
+
+        x = self.activ_fn(self.fc1(x))
+        x = self.activ_fn(self.fc2(x))
+        x = self.fc3(x)
+
         return x
         
