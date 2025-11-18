@@ -32,6 +32,35 @@ class Conv_Net(nn.Module):
     def __init__(self):
         super().__init__()
 
+        # kernel_size is the size of the filter
+        # Increased channels for better feature extraction
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=1)
+
+        self.fc1 = nn.Linear(in_features=64*3*3, out_features=256)
+        self.fc2 = nn.Linear(in_features=256, out_features=10)
+
+        self.activ_fn = nn.ReLU()
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+
     def forward(self, x):
+        """ convolution -> activate -> pool """
+        c1 = self.conv1(x)
+        activ1 = self.activ_fn(c1)
+        x = self.pool(activ1)
+
+        c2 = self.conv2(x)
+        activ2 = self.activ_fn(c2)
+        x = self.pool(activ2)
+
+        c3 = self.conv3(x)
+        activ3 = self.activ_fn(c3)
+        x = self.pool(activ3)
+
+        x = torch.flatten(x, 1)
+
+        x = self.activ_fn(self.fc1(x))
+        x = self.fc2(x)
+
         return x
-        

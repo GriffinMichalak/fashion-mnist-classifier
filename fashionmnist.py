@@ -29,7 +29,7 @@ transform = transforms.Compose([                            # Use transforms to 
     transforms.Normalize(mean=[0.5], std=[0.5])             # Common method for grayscale images
 ])
 
-batch_size = ''' Insert a good batch size number here '''
+batch_size = 64 # 32–128
 
 
 '''
@@ -39,12 +39,11 @@ Load the dataset. Make sure to utilize the transform and batch_size from the las
 
 '''
 
-trainset = torchvision.datasets.FashionMNIST(''' Fill in this function ''')
-trainloader = torch.utils.data.DataLoader(''' Fill in this function ''')
+trainset = torchvision.datasets.FashionMNIST(root="data", train=True, download=True, transform=transform)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
 
-testset = torchvision.datasets.FashionMNIST(''' Fill in this function ''')
-testloader = torch.utils.data.DataLoader(''' Fill in this function ''')
-
+testset = torchvision.datasets.FashionMNIST(root="data", train=False, download=True, transform=transform)
+testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
 
 '''
 
