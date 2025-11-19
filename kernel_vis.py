@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from cnn import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 conv_net = Conv_Net()
@@ -23,7 +25,19 @@ print(conv1_weights)
 # the grid might have 4 rows and 8 columns. Finally, normalize the values in the grid to be 
 # between 0 and 1 before plotting.
 
-''' YOUR CODE HERE '''
+rows = 4
+cols = 8
+plt.figure(figsize=(5,5))
+for i in range(len(conv1_weights)):
+    plt.subplot(rows, cols, i+1)
+    kernel = conv1_weights[i]
+    image_np = kernel.detach().numpy().squeeze(0)
+    min_val = np.min(image_np)
+    max_val = np.max(image_np)
+    normalized = (image_np - min_val) / (max_val - min_val)
+    plt.imshow(normalized, cmap=plt.cm.binary)
+    plt.axis('off')
+plt.show()
 
 
 
