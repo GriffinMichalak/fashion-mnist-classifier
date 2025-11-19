@@ -45,6 +45,7 @@ plt.savefig("kernel_grid.png")
 img = cv2.imread('sample_image.png', cv2.IMREAD_GRAYSCALE)
 img = cv2.resize(img, (28, 28))
 img = img / 255.0					# Normalize the image
+
 img = torch.tensor(img).float()
 img = img.unsqueeze(0).unsqueeze(0)
 
@@ -105,8 +106,16 @@ feature_maps.append(x.squeeze(0))
 rows = 1
 cols = 3
 plt.figure(figsize=(15, 5))
+
+plt.subplot(rows, cols+1, 1)
+original_img_np = img.squeeze().detach().numpy()
+plt.imshow(original_img_np, cmap=plt.cm.binary)
+plt.title('Original Image')
+plt.axis('off')
+
+# Now plot feature maps as progression
 for layer_idx in range(len(feature_maps)):
-    plt.subplot(rows, cols, layer_idx + 1)
+    plt.subplot(rows, cols+1, layer_idx + 2)
     layer_output = feature_maps[layer_idx]
     image_np = layer_output.mean(dim=0).detach().numpy()
     min_val = np.min(image_np)
@@ -117,8 +126,9 @@ for layer_idx in range(len(feature_maps)):
         normalized = image_np
     
     plt.imshow(normalized, cmap=plt.cm.binary)
-    plt.title(f'Layer {layer_idx + 1} ({layer_output.shape[0]} channels)')
+    plt.title(f'Conv Layer {layer_idx + 1}')
     plt.axis('off')
+
 plt.tight_layout()
 plt.show()
 
