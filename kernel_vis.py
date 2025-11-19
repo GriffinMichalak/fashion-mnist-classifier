@@ -86,8 +86,7 @@ plt.show()
 
 
 # Save the grid to a file named 'image_transform_grid.png'. Add the saved image to the PDF report you submit.
-
-''' YOUR CODE HERE '''
+plt.savefig("image_transform_grid.png") 
 
 
 # Create a feature map progression. You can manually specify the forward pass order or programatically track each activation through the forward pass of the CNN.
