@@ -1,6 +1,9 @@
 import torch
 import torchvision
 import torchvision.transforms.v2 as transforms
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -151,9 +154,6 @@ Code to load saved weights commented out below - may be useful for debugging.
 # feedforward_net.load_state_dict(torch.load('ffn.pth'))
 # conv_net.load_state_dict(torch.load('cnn.pth'))
 
-import matplotlib.pyplot as plt
-import numpy as np
-
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
@@ -175,6 +175,11 @@ cnn_correct_ex = None
 ffn_incorrect_ex = None
 cnn_incorrect_ex = None
 
+cnn_true = []
+cnn_pred = []
+ffn_true = []
+ffn_pred = []
+
 with torch.no_grad():           # since we're not training, we don't need to calculate the gradients for our outputs
     for data in testloader:
         images, labels = data
@@ -183,6 +188,9 @@ with torch.no_grad():           # since we're not training, we don't need to cal
         _, predictions = torch.max(outputs_cnn, 1)
         # collect the correct predictions for each class
         for image, label, prediction in zip(images, labels, predictions):
+            # add data for confusion matrix
+            cnn_true.append(label.item())
+            cnn_pred.append(prediction.item())
             if label == prediction:
                 correct_cnn = correct_cnn + 1
                 cnn_correct_ex = [image, prediction, label]
@@ -195,6 +203,9 @@ with torch.no_grad():           # since we're not training, we don't need to cal
         _, predictions = torch.max(outputs_ffn, 1)
         # collect the correct predictions for each class
         for image, label, prediction in zip(images, labels, predictions):
+            # add data for confusion matrix
+            ffn_true.append(label)
+            ffn_pred.append(prediction)
             if label == prediction:
                 correct_ffn = correct_ffn + 1
                 ffn_correct_ex = [image, prediction, label]
@@ -247,6 +258,31 @@ def count_parameters(model):
 
 print("Total parameters in FFN:", count_parameters(feedforward_net))
 print("Total parameters in CNN:", count_parameters(conv_net))
+
+''' For each neural network, submit a confusion matrix plot on the test data. Please
+include clear labels indicating predicted and true classes.'''
+
+cnn_cm = confusion_matrix(cnn_true, cnn_pred)
+ffn_cm = confusion_matrix(ffn_true, ffn_pred)
+
+# cnn
+plt.figure(figsize=(10, 8))
+sns.heatmap(cnn_cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=class_names, yticklabels=class_names)
+plt.title('CNN Confusion Matrix')
+plt.ylabel('True')
+plt.xlabel('Predicted')
+plt.show()
+
+# ffn
+plt.figure(figsize=(10, 8))
+sns.heatmap(ffn_cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=class_names, yticklabels=class_names)
+plt.title('FFN Confusion Matrix')
+plt.ylabel('True')
+plt.xlabel('Predicted')
+plt.show()
+
 '''
 PART 8:
 Compare the performance and characteristics of FFN and CNN models.
