@@ -42,10 +42,7 @@ plt.show()
 
 
 # Save the grid to a file named 'kernel_grid.png'. Add the saved image to the PDF report you submit.
-
-''' YOUR CODE HERE '''
-
-
+plt.savefig("kernel_grid.png") 
 
 
 # Apply the kernel to the provided sample image.
