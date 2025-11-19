@@ -71,7 +71,17 @@ output = output.unsqueeze(1)
 # Choose dimensions of the grid appropriately. For example, if the first layer has 32 kernels, the grid might have 4 rows and 8 columns.
 # Finally, normalize the values in the grid to be between 0 and 1 before plotting.
 
-''' YOUR CODE HERE '''
+plt.figure(figsize=(5,5))
+for i in range(len(output)):
+    plt.subplot(rows, cols, i+1)
+    kernel = output[i]
+    image_np = kernel.detach().numpy().squeeze(0)
+    min_val = np.min(image_np)
+    max_val = np.max(image_np)
+    normalized = (image_np - min_val) / (max_val - min_val)
+    plt.imshow(normalized, cmap=plt.cm.binary)
+    plt.axis('off')
+plt.show()
 
 
 
