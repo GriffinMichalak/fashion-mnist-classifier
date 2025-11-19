@@ -13,8 +13,9 @@ conv_net = Conv_Net()
 conv_net.load_state_dict(torch.load('cnn.pth'))
 
 # Get the weights of the first convolutional layer of the network
-
-''' YOUR CODE HERE '''
+conv1_weights = conv_net.conv1.weight
+print("Weights of the first convolutional layer:")
+print(conv1_weights)
 
 
 # Create a plot that is a grid of images, where each image is one kernel from the conv layer.
