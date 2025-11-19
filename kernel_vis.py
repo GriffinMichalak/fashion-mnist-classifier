@@ -1,7 +1,5 @@
 import cv2
-import numpy
 import torch
-import torchvision
 import torchvision.transforms.v2 as transforms
 import torch.nn as nn
 import torch.nn.functional as F
