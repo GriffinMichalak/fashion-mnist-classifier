@@ -57,7 +57,7 @@ print(img.shape)
 
 # Apply the kernel to the image
 
-output = ''' YOUR CODE HERE '''
+output = F.conv2d(img, conv1_weights, bias=None, stride=1, padding=0)
 
 
 # convert output from shape (1, num_channels, output_dim_0, output_dim_1) to (num_channels, 1, output_dim_0, output_dim_1) for plotting.
