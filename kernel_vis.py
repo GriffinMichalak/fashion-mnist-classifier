@@ -10,7 +10,6 @@ from cnn import *
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 conv_net = Conv_Net()
 conv_net.load_state_dict(torch.load('cnn.pth'))
 
@@ -53,7 +52,7 @@ print(img.shape)
 
 # Apply the kernel to the image
 
-output = F.conv2d(img, conv1_weights, bias=None, stride=1, padding=0)
+output = F.conv2d(img, conv1_weights, bias=None, stride=1, padding=1)
 
 
 # convert output from shape (1, num_channels, output_dim_0, output_dim_1) to (num_channels, 1, output_dim_0, output_dim_1) for plotting.
@@ -86,19 +85,19 @@ plt.savefig("image_transform_grid.png")
 # Create a feature map progression. You can manually specify the forward pass order or programatically track each activation through the forward pass of the CNN.
 feature_maps = []
 
-# Layer 1: conv1 -> ReLU -> Pool
+# conv1
 x = conv_net.conv1(img)
 x = conv_net.activ_fn(x)
 feature_maps.append(x.squeeze(0))
 x = conv_net.pool(x)
 
-# Layer 2: conv2 -> ReLU -> Pool
+# conv2
 x = conv_net.conv2(x)
 x = conv_net.activ_fn(x)
 feature_maps.append(x.squeeze(0))
 x = conv_net.pool(x)
 
-# Layer 3: conv3 -> ReLU -> Pool
+# conv3
 x = conv_net.conv3(x)
 x = conv_net.activ_fn(x)
 feature_maps.append(x.squeeze(0))
