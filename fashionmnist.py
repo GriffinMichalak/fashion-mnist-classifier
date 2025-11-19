@@ -6,6 +6,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 from cnn import *
 from ffn import *
+import time
+import numpy as np
 
 '''
 In this file you will write end-to-end code to train two neural networks to categorize fashion-mnist data,
@@ -62,6 +64,12 @@ and are using the same number of epochs, but it is not recommended for this assi
 '''
 num_epochs_ffn = NUM_EPOCHS
 
+ffn_loss = []
+ffn_time = []
+
+# start a timer for ffn training
+start_time = time.time() 
+
 for epoch in range(num_epochs_ffn):  # loop over the dataset multiple times
     running_loss_ffn = 0.0
 
@@ -83,6 +91,11 @@ for epoch in range(num_epochs_ffn):  # loop over the dataset multiple times
         running_loss_ffn += loss.item()
 
     print(f"Training loss: {running_loss_ffn}")
+    
+    # add loss data for graph
+    ffn_loss.append(running_loss_ffn)
+    elapsed_time = time.time() - start_time
+    ffn_time.append(elapsed_time)
 
 print('Finished Training')
 
@@ -90,6 +103,12 @@ torch.save(feedforward_net.state_dict(), 'ffn.pth')  # Saves model file (upload 
 
 
 num_epochs_cnn = NUM_EPOCHS
+
+cnn_loss = []
+cnn_time = []
+
+# start a timer for cnn training
+start_time = time.time() 
 
 for epoch in range(num_epochs_cnn):  # loop over the dataset multiple times
     running_loss_cnn = 0.0
@@ -108,7 +127,14 @@ for epoch in range(num_epochs_cnn):  # loop over the dataset multiple times
         optimizer_cnn.step()
         running_loss_cnn += loss.item()
 
+
     print(f"Training loss: {running_loss_cnn}")
+
+    # add loss data for graph
+    cnn_loss.append(running_loss_cnn)
+    elapsed_time = time.time() - start_time
+    cnn_time.append(elapsed_time)
+
 
 print('Finished Training')
 
@@ -125,11 +151,29 @@ Code to load saved weights commented out below - may be useful for debugging.
 # feedforward_net.load_state_dict(torch.load('ffn.pth'))
 # conv_net.load_state_dict(torch.load('cnn.pth'))
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+def display_image(img, prediction, label):
+    image_np = img.squeeze().numpy()
+    plt.imshow(image_np, cmap='gray')
+    plt.title(f"Prediction: {class_names[prediction]} | True Label: {class_names[label]}")
+    plt.axis('off')
+    plt.show()
+
 correct_ffn = 0
 total_ffn = 0
 
 correct_cnn = 0
 total_cnn = 0
+
+ffn_correct_ex = None
+cnn_correct_ex = None
+ffn_incorrect_ex = None
+cnn_incorrect_ex = None
 
 with torch.no_grad():           # since we're not training, we don't need to calculate the gradients for our outputs
     for data in testloader:
@@ -138,29 +182,65 @@ with torch.no_grad():           # since we're not training, we don't need to cal
         outputs_cnn = conv_net(images)
         _, predictions = torch.max(outputs_cnn, 1)
         # collect the correct predictions for each class
-        for label, prediction in zip(labels, predictions):
+        for image, label, prediction in zip(images, labels, predictions):
             if label == prediction:
                 correct_cnn = correct_cnn + 1
+                cnn_correct_ex = [image, prediction, label]
+            else:
+                cnn_incorrect_ex = [image, prediction, label]
             total_cnn = total_cnn + 1
 
         # ffn
         outputs_ffn = feedforward_net(images)
         _, predictions = torch.max(outputs_ffn, 1)
         # collect the correct predictions for each class
-        for label, prediction in zip(labels, predictions):
+        for image, label, prediction in zip(images, labels, predictions):
             if label == prediction:
                 correct_ffn = correct_ffn + 1
+                ffn_correct_ex = [image, prediction, label]
+            else:
+                ffn_incorrect_ex = [image, prediction, label]
             total_ffn = total_ffn + 1
+
 
 print('Accuracy for feedforward network: ', correct_ffn/total_ffn)
 print('Accuracy for convolutional network: ', correct_cnn/total_cnn)
-
 
 '''
 PART 7:
 Check the instructions PDF. You need to generate some plots. 
 '''
 # code
+print("(CNN) Image classified correctly")
+display_image(cnn_correct_ex[0], cnn_correct_ex[1], cnn_correct_ex[2])
+
+print("(CNN) Image classified incorrectly")
+display_image(cnn_incorrect_ex[0], cnn_incorrect_ex[1], cnn_incorrect_ex[2])
+
+print("(FFN) Image classified correctly")
+display_image(ffn_correct_ex[0], ffn_correct_ex[1], ffn_correct_ex[2])
+
+print("(FFN) Image classified incorrectly")
+display_image(ffn_incorrect_ex[0], ffn_incorrect_ex[1], ffn_incorrect_ex[2])
+
+'''
+For each neural network, submit one plot showing your training loss over time.
+'''
+ffn_loss = np.array(ffn_loss)
+ffn_time = np.array(ffn_time)
+
+cnn_loss = np.array(cnn_loss)
+cnn_time = np.array(cnn_time)
+
+plt.plot(ffn_time, ffn_loss, label='FNN', color='blue')
+plt.plot(cnn_time, cnn_loss, label='CNN', color='red')
+plt.title("FFN & CNN Training Loss Over Time")
+plt.xlabel("Time")
+plt.ylabel("Training Loss")
+plt.legend()
+plt.show()
+
+# For each neural network, submit its total number of parameters.
 
 '''
 PART 8:
