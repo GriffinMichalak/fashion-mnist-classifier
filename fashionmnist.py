@@ -241,7 +241,12 @@ plt.legend()
 plt.show()
 
 # For each neural network, submit its total number of parameters.
+# inspired by https://www.geeksforgeeks.org/deep-learning/check-the-total-number-of-parameters-in-a-pytorch-model/#:~:text=Step%203%3A%20Summing%20Up%20the%20Parameters
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+print("Total parameters in FFN:", count_parameters(feedforward_net))
+print("Total parameters in CNN:", count_parameters(conv_net))
 '''
 PART 8:
 Compare the performance and characteristics of FFN and CNN models.
