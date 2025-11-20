@@ -205,8 +205,8 @@ with torch.no_grad():           # since we're not training, we don't need to cal
         # collect the correct predictions for each class
         for image, label, prediction in zip(images, labels, predictions):
             # add data for confusion matrix
-            ffn_true.append(label)
-            ffn_pred.append(prediction)
+            ffn_true.append(label.item())
+            ffn_pred.append(prediction.item())
             if label == prediction:
                 correct_ffn = correct_ffn + 1
                 ffn_correct_ex = [image, prediction, label]
@@ -260,6 +260,11 @@ def count_parameters(model):
 print("Total parameters in FFN:", count_parameters(feedforward_net))
 print("Total parameters in CNN:", count_parameters(conv_net))
 
+'''
+PART 8:
+Compare the performance and characteristics of FFN and CNN models.
+'''
+
 ''' For each neural network, submit a confusion matrix plot on the test data. Please
 include clear labels indicating predicted and true classes.'''
 
@@ -283,9 +288,3 @@ plt.title('FFN Confusion Matrix')
 plt.ylabel('True')
 plt.xlabel('Predicted')
 plt.show()
-
-'''
-PART 8:
-Compare the performance and characteristics of FFN and CNN models.
-'''
-# code
