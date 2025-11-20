@@ -81,7 +81,7 @@ for epoch in range(num_epochs_ffn):  # loop over the dataset multiple times
         inputs, labels = data
 
         # Flatten inputs for ffn
-        ''' flattening within FF_Net.forward() '''
+        inputs = inputs.view(inputs.size(0), -1)
 
         # zero the parameter gradients
         optimizer_ffn.zero_grad()
@@ -199,7 +199,8 @@ with torch.no_grad():           # since we're not training, we don't need to cal
             total_cnn = total_cnn + 1
 
         # ffn
-        outputs_ffn = feedforward_net(images)
+        images_flat = images.view(images.size(0), -1)
+        outputs_ffn = feedforward_net(images_flat)
         _, predictions = torch.max(outputs_ffn, 1)
         # collect the correct predictions for each class
         for image, label, prediction in zip(images, labels, predictions):

@@ -29,7 +29,7 @@ class FF_Net(nn.Module):
         self.activ_fn = nn.ReLU()
 
     def forward(self, x):
-        x = torch.flatten(x, 1)
+        # x = torch.flatten(x, 1)
 
         x = self.activ_fn(self.fc1(x))
         x = self.activ_fn(self.fc2(x))

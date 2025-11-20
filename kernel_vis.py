@@ -24,6 +24,9 @@ print("Weights of the first convolutional layer:")
 rows = 4
 cols = 8
 plt.figure(figsize=(5,5))
+plt.title("Kernels From the First Conv Layer of CNN")
+plt.xticks([])
+plt.yticks([])
 for i in range(len(conv1_weights)):
     plt.subplot(rows, cols, i+1)
     kernel = conv1_weights[i]
@@ -66,6 +69,9 @@ output = output.unsqueeze(1)
 # Finally, normalize the values in the grid to be between 0 and 1 before plotting.
 
 plt.figure(figsize=(5,5))
+plt.title("Applying Kernels to Sample Image")
+plt.xticks([])
+plt.yticks([])
 for i in range(len(output)):
     plt.subplot(rows, cols, i+1)
     kernel = output[i]
@@ -104,6 +110,9 @@ feature_maps.append(x.squeeze(0))
 rows = 1
 cols = 3
 plt.figure(figsize=(15, 5))
+plt.title("Feature Map Progression of CNN")
+plt.xticks([])
+plt.yticks([])
 
 plt.subplot(rows, cols+1, 1)
 original_img_np = img.squeeze().detach().numpy()
